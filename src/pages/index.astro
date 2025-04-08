@@ -2,11 +2,245 @@
 import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout>
-	<h1 class="text-3xl font-bold underline">Hello world!</h1>
-	<button
-		class="inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900"
-	>
-		Button
-	</button>
+<Layout title="ドット絵変換 | Pixelart Converter">
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+		<!-- 左側：画像アップロードと設定 -->
+		<div class="lg:col-span-1">
+			<div class="card bg-base-200 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title text-xl mb-4">画像アップロード</h2>
+
+					<!-- 画像アップロード領域 -->
+					<div
+						class="upload-area border-2 border-dashed border-primary/50 rounded-lg p-8 text-center mb-6"
+					>
+						<div class="flex flex-col items-center justify-center">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-12 h-12 text-primary/70 mb-2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+								></path>
+							</svg>
+							<p class="mb-2">画像をドラッグ＆ドロップ</p>
+							<p class="text-sm text-base-content/70 mb-4">
+								または
+							</p>
+							<label class="btn btn-primary btn-sm">
+								ファイルを選択
+								<input
+									type="file"
+									class="hidden"
+									accept="image/*"
+								/>
+							</label>
+						</div>
+					</div>
+
+					<!-- 基本設定 -->
+					<h3 class="font-bold text-lg mb-2">基本設定</h3>
+					<div class="space-y-4 mb-6">
+						<div class="form-control">
+							<label class="label">
+								<span class="label-text">ドットサイズ</span>
+								<span class="label-text-alt">8px</span>
+							</label>
+							<input
+								type="range"
+								min="1"
+								max="16"
+								value="8"
+								class="range range-primary range-sm"
+							/>
+							<div
+								class="w-full flex justify-between text-xs px-1 mt-1"
+							>
+								<span>1px</span>
+								<span>4px</span>
+								<span>8px</span>
+								<span>12px</span>
+								<span>16px</span>
+							</div>
+						</div>
+
+						<div class="form-control">
+							<label class="label">
+								<span class="label-text">カラーパレット</span>
+							</label>
+							<select class="select select-bordered w-full">
+								<option selected>標準 (16色)</option>
+								<option>ゲームボーイ (4色)</option>
+								<option>レトロPC (8色)</option>
+								<option>モノクロ (2色)</option>
+								<option>カスタム</option>
+							</select>
+						</div>
+					</div>
+
+					<!-- 詳細設定 -->
+					<div class="collapse collapse-arrow bg-base-100">
+						<input type="checkbox" />
+						<div class="collapse-title font-bold text-lg">
+							詳細設定
+						</div>
+						<div class="collapse-content space-y-4">
+							<div class="form-control">
+								<label class="label">
+									<span class="label-text">ディザリング</span>
+								</label>
+								<select class="select select-bordered w-full">
+									<option selected>なし</option>
+									<option>フロイド-スタインバーグ</option>
+									<option>アトキンソン</option>
+									<option>オーダード</option>
+								</select>
+							</div>
+
+							<div class="form-control">
+								<label class="label">
+									<span class="label-text">エッジ検出</span>
+									<span class="label-text-alt">50%</span>
+								</label>
+								<input
+									type="range"
+									min="0"
+									max="100"
+									value="50"
+									class="range range-primary range-sm"
+								/>
+							</div>
+
+							<div class="form-control">
+								<label class="label">
+									<span class="label-text">コントラスト</span>
+									<span class="label-text-alt">0%</span>
+								</label>
+								<input
+									type="range"
+									min="-100"
+									max="100"
+									value="0"
+									class="range range-primary range-sm"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<!-- 変換ボタン -->
+					<div class="card-actions justify-end mt-4">
+						<button class="btn btn-primary">変換する</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 右側：プレビュー領域 -->
+		<div class="lg:col-span-2">
+			<div class="card bg-base-200 shadow-xl h-full">
+				<div class="card-body">
+					<h2 class="card-title text-xl mb-4">プレビュー</h2>
+
+					<!-- タブ切り替え -->
+					<div class="tabs tabs-boxed mb-4">
+						<a class="tab tab-active">元画像</a>
+						<a class="tab">ドット絵</a>
+						<a class="tab">比較</a>
+					</div>
+
+					<!-- プレビュー表示領域 -->
+					<div
+						class="preview-area bg-base-300 rounded-lg flex items-center justify-center p-4 h-[400px]"
+					>
+						<div class="text-center">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-16 h-16 mx-auto text-base-content/30 mb-4"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+								></path>
+							</svg>
+							<p class="text-base-content/50">
+								画像をアップロードすると<br
+								/>ここにプレビューが表示されます
+							</p>
+						</div>
+					</div>
+
+					<!-- 操作ボタン -->
+					<div class="flex justify-between mt-4">
+						<div class="btn-group">
+							<button class="btn btn-sm">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-5 h-5"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+									></path>
+								</svg>
+								拡大
+							</button>
+							<button class="btn btn-sm">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-5 h-5"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6"
+									></path>
+								</svg>
+								縮小
+							</button>
+						</div>
+
+						<div>
+							<button class="btn btn-sm btn-outline">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-5 h-5"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+									></path>
+								</svg>
+								ダウンロード
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </Layout>
